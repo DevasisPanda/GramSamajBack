@@ -54,12 +54,18 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo and Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Heart className="h-8 w-8 text-saffron-600" />
-            <h1 className="text-3xl font-bold text-gray-900">AIRD Trust</h1>
+        <div className="text-center mb-6">
+          <a
+            href={import.meta.env.VITE_FRONTEND_URL || "https://gram-samaj2.vercel.app"}
+            className="inline-flex items-center gap-1.5 text-xs text-blue-700 hover:underline mb-3 font-semibold bg-white/70 px-3 py-1 rounded-full shadow-xs"
+          >
+            &larr; Return to Main Website
+          </a>
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Heart className="h-7 w-7 text-saffron-600" />
+            <h1 className="text-2xl font-bold text-gray-900">AIRD Management Portal</h1>
           </div>
-          <p className="text-gray-600">Appropriate Institute of Rural Development</p>
+          <p className="text-xs text-gray-600">Appropriate Institute of Rural Development (AIRD Trust)</p>
         </div>
 
         {/* Login Card */}
