@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1780305967866,
+      "tag": "0000_lonely_wiccan",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1780306066002,
+      "tag": "0001_faithful_grandmaster",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1780340806168,
+      "tag": "0002_open_piledriver",
+      "breakpoints": true
+    }
+  ]
+}
