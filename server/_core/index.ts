@@ -149,86 +149,10 @@ async function startServer() {
 
   // Auto-initialize tables and seed admin user on startup
   try {
-    if (process.env.DATABASE_URL) {
-      const mysql = await import("mysql2/promise");
-      let connection;
-      try {
-        connection = await mysql.createConnection(process.env.DATABASE_URL);
-        console.log("[Database] Checking and initializing database tables...");
-        const fs = await import("fs");
-        const path = await import("path");
-        const sqlFiles = [
-          "drizzle/init_schema.sql",
-          "drizzle/0001_faithful_grandmaster.sql",
-          "drizzle/0002_open_piledriver.sql"
-        ];
-        for (const relPath of sqlFiles) {
-          const fullPath = path.resolve(process.cwd(), relPath);
-          if (fs.existsSync(fullPath)) {
-            const content = fs.readFileSync(fullPath, "utf-8");
-            const statements = content.split("--> statement-breakpoint").map(s => s.trim()).filter(Boolean);
-            for (const stmt of statements) {
-              try {
-                await connection.query(stmt);
-              } catch (stmtErr: any) {
-                // Ignore minor duplicates or existing tables
-              }
-            }
-          }
-        }
-        console.log("[Database] ✅ Database tables ready.");
-      } finally {
-        if (connection) await connection.end();
-      }
-    }
+    const { ensureDatabaseReady } = await import("../db-init");
+    await ensureDatabaseReady();
   } catch (dbInitErr: any) {
-    console.warn("[Database] Table init notice:", dbInitErr?.message);
-  }
-
-  // Auto-seed admin user on startup if credentials exist in environment
-  const adminEmail = process.env.ADMIN_EMAIL;
-  const adminPassword = process.env.ADMIN_SEED_PASSWORD;
-  if (adminEmail && adminPassword && process.env.DATABASE_URL) {
-    try {
-      const { getDb } = await import("../db");
-      const { users } = await import("../../drizzle/schema");
-      const { hashPassword } = await import("../auth");
-      const { eq } = await import("drizzle-orm");
-      const db = await getDb();
-      if (db) {
-        const email = adminEmail.trim().toLowerCase();
-        const existing = await db.select().from(users).where(eq(users.email, email)).limit(1);
-        if (existing.length === 0) {
-          console.log(`[AutoSeed] Seeding default System Admin: ${email}`);
-          const passwordHash = await hashPassword(adminPassword);
-          await db.insert(users).values({
-            email,
-            passwordHash,
-            name: "System Admin",
-            role: "admin",
-            isSystemAdmin: true,
-            status: "active",
-            membershipType: "regular",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            lastSignedIn: new Date(),
-          });
-          console.log(`[AutoSeed] ✅ Admin user successfully configured: ${email}`);
-        } else {
-          // Ensure password and role are active
-          const passwordHash = await hashPassword(adminPassword);
-          await db.update(users).set({
-            passwordHash,
-            role: "admin",
-            isSystemAdmin: true,
-            status: "active",
-          }).where(eq(users.email, email));
-          console.log(`[AutoSeed] ✅ Admin credentials updated: ${email}`);
-        }
-      }
-    } catch (err: any) {
-      console.warn(`[AutoSeed] Notice: ${err?.message || "Could not auto-seed admin"}`);
-    }
+    console.warn("[Database] Table init notice:", dbInitErr?.message || dbInitErr);
   }
 
   const port = parseInt(process.env.PORT || "5000");
