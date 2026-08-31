@@ -149,10 +149,46 @@ async function startServer() {
 
   const port = parseInt(process.env.PORT || "5000");
 
-  server.listen(port, "0.0.0.0", () => {
+  server.listen(port, "0.0.0.0", async () => {
     console.log(`\n🚀 Server running at:`);
     console.log(`   > Local:   http://localhost:${port}/`);
     console.log(`   > Network: http://127.0.0.1:${port}/\n`);
+
+    // Auto-seed admin user on startup if credentials exist in environment
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_SEED_PASSWORD;
+    if (adminEmail && adminPassword) {
+      try {
+        const { getDb } = await import("../db");
+        const { users } = await import("../../drizzle/schema");
+        const { hashPassword } = await import("../auth");
+        const { eq } = await import("drizzle-orm");
+        const db = await getDb();
+        if (db) {
+          const email = adminEmail.trim().toLowerCase();
+          const existing = await db.select().from(users).where(eq(users.email, email)).limit(1);
+          if (existing.length === 0) {
+            console.log(`[AutoSeed] Seeding default System Admin: ${email}`);
+            const passwordHash = await hashPassword(adminPassword);
+            await db.insert(users).values({
+              email,
+              passwordHash,
+              name: "System Admin",
+              role: "admin",
+              isSystemAdmin: true,
+              status: "active",
+              membershipType: "regular",
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              lastSignedIn: new Date(),
+            });
+            console.log(`[AutoSeed] ✅ Admin user successfully configured: ${email}`);
+          }
+        }
+      } catch (err: any) {
+        console.warn(`[AutoSeed] Notice: ${err?.message || "Could not auto-seed admin"}`);
+      }
+    }
   });
 }
 
