@@ -94,47 +94,61 @@ export const authRouter = router({
     .input(
       z.object({
         email: z.string().email(),
-        password: z
-          .string()
-          .min(8, "Password must be at least 8 characters long")
-          .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-          .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-          .regex(/[0-9]/, "Password must contain at least one number"),
-        name: z.string().min(2),
-        phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits").optional().or(z.literal("")),
+        password: z.string().min(6, "Password must be at least 6 characters"),
+        name: z.string().min(1, "Name is required"),
+        phone: z.string().optional().or(z.literal("")),
       })
     )
     .mutation(async ({ input }) => {
-      const db = await getDb();
-      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+      let db = null;
+      try {
+        db = await getDb();
+      } catch (err: any) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: `Database error: ${err?.message}` });
+      }
+
+      if (!db) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable. Please check DATABASE_URL." });
+      }
+
+      const cleanEmail = input.email.trim().toLowerCase();
 
       // Check if user already exists
-      const existingUser = await db.select().from(users).where(eq(users.email, input.email)).limit(1);
+      const existingUser = await db.select().from(users).where(eq(users.email, cleanEmail)).limit(1);
 
       if (existingUser.length > 0) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Registration failed" });
+        throw new TRPCError({ code: "BAD_REQUEST", message: "An account with this email already exists. Please sign in." });
       }
 
       const passwordHash = await hashPassword(input.password);
 
-      await db.transaction(async (tx) => {
-        // Insert user
-        await tx.insert(users).values({
-          email: input.email,
-          name: input.name,
-          phone: input.phone || null,
-          passwordHash,
-          role: "user",
-          status: "active",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          lastSignedIn: new Date(),
-        });
+      const result = await db.insert(users).values({
+        email: cleanEmail,
+        name: input.name,
+        phone: input.phone || null,
+        passwordHash,
+        role: "user",
+        status: "active",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        lastSignedIn: new Date(),
       });
+
+      const newUserId = (result as any)?.[0]?.insertId || 0;
+      const token = await createJWT(newUserId, cleanEmail, "user", 0);
 
       return {
         success: true,
-        message: "Registration successful. You can now log in.",
+        token,
+        user: {
+          id: newUserId,
+          name: input.name,
+          email: cleanEmail,
+          role: "user",
+          phone: input.phone || undefined,
+          status: "active",
+        },
+        message: "Registration successful. Welcome to AIRD!",
       };
     }),
 

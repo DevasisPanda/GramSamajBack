@@ -154,28 +154,29 @@ async function startServer() {
       let connection;
       try {
         connection = await mysql.createConnection(process.env.DATABASE_URL);
-        const [rows]: any = await connection.query("SHOW TABLES LIKE 'users'");
-        if (rows.length === 0) {
-          console.log("[Database] Initializing database tables from migrations...");
-          const fs = await import("fs");
-          const path = await import("path");
-          const sqlFiles = ["drizzle/0001_faithful_grandmaster.sql", "drizzle/0002_open_piledriver.sql"];
-          for (const relPath of sqlFiles) {
-            const fullPath = path.resolve(process.cwd(), relPath);
-            if (fs.existsSync(fullPath)) {
-              const content = fs.readFileSync(fullPath, "utf-8");
-              const statements = content.split("--> statement-breakpoint").map(s => s.trim()).filter(Boolean);
-              for (const stmt of statements) {
-                try {
-                  await connection.query(stmt);
-                } catch (stmtErr: any) {
-                  // Ignore minor duplicates
-                }
+        console.log("[Database] Checking and initializing database tables...");
+        const fs = await import("fs");
+        const path = await import("path");
+        const sqlFiles = [
+          "drizzle/init_schema.sql",
+          "drizzle/0001_faithful_grandmaster.sql",
+          "drizzle/0002_open_piledriver.sql"
+        ];
+        for (const relPath of sqlFiles) {
+          const fullPath = path.resolve(process.cwd(), relPath);
+          if (fs.existsSync(fullPath)) {
+            const content = fs.readFileSync(fullPath, "utf-8");
+            const statements = content.split("--> statement-breakpoint").map(s => s.trim()).filter(Boolean);
+            for (const stmt of statements) {
+              try {
+                await connection.query(stmt);
+              } catch (stmtErr: any) {
+                // Ignore minor duplicates or existing tables
               }
             }
           }
-          console.log("[Database] ✅ Database tables successfully created.");
         }
+        console.log("[Database] ✅ Database tables ready.");
       } finally {
         if (connection) await connection.end();
       }
