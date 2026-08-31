@@ -69,7 +69,7 @@ export default function AboutUsManagementPage() {
     regNo: "",
     established: "",
     founder: "",
-    logoUrl: "/logo.jpg",
+    logoUrl: "/aird-logo.png",
     introParagraphs: [] as IntroParagraph[],
     commitments: [] as Commitment[],
     visionTitle: "",
@@ -105,7 +105,7 @@ export default function AboutUsManagementPage() {
         regNo: settings.regNo || "",
         established: settings.established || "",
         founder: settings.founder || "",
-        logoUrl: settings.logoUrl || "/logo.jpg",
+        logoUrl: settings.logoUrl || "/aird-logo.png",
         introParagraphs: safeParseJSON(settings.introParagraphs, [] as IntroParagraph[]),
         commitments: safeParseJSON(settings.commitments, [] as Commitment[]),
         visionTitle: settings.visionTitle || "",
@@ -438,7 +438,7 @@ export default function AboutUsManagementPage() {
                         <div className="space-y-1.5">
                           <Label className="text-xs font-bold">Bold Accent Prefix (Optional)</Label>
                           <Input
-                            placeholder="e.g. Valmiki Samaj Charitable Trust. Where there is service..."
+                            placeholder="e.g. Appropriate Institute of Rural Development. Strengthening Gram Swaraj..."
                             value={para.boldPrefix || ""}
                             onChange={(e) => updateParagraph(index, { boldPrefix: e.target.value })}
                           />

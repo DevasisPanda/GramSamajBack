@@ -16,7 +16,7 @@ export default function HomepageManagementPage() {
   const [selectedSlide, setSelectedSlide] = useState<1 | 2 | 3 | 4 | 5>(1);
 
   const [formData, setFormData] = useState({
-    heroTitle: "Valmiki Samaj Charitable Trust",
+    heroTitle: "Appropriate Institute of Rural Development",
     heroDescription: "",
     heroImage: "",
     heroImage2: "",
@@ -66,7 +66,7 @@ export default function HomepageManagementPage() {
   useEffect(() => {
     if (settings) {
       setFormData({
-        heroTitle: settings.heroTitle || "Valmiki Samaj Charitable Trust",
+        heroTitle: settings.heroTitle || "Appropriate Institute of Rural Development",
         heroDescription: settings.heroDescription || "",
         heroImage: settings.heroImage || "",
         heroImage2: (settings as any).heroImage2 || "",

@@ -380,8 +380,8 @@ export default function DonationManagementPage() {
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(18);
-    doc.setTextColor(13, 148, 136); // teal-600
-    doc.text("Valmiki Samaj Charitable Trust", 14, 20);
+    doc.setTextColor(21, 128, 61); // forest-700
+    doc.text("Appropriate Institute of Rural Development", 14, 20);
     
     doc.setFontSize(14);
     doc.setTextColor(30, 41, 59);
@@ -464,7 +464,7 @@ export default function DonationManagementPage() {
               {user?.role === "admin" ? "Record Donation" : "Make a Donation"}
             </CardTitle>
             <CardDescription className="text-xs text-gray-400">
-              {user?.role === "admin" ? "Log new online or offline (cash/cheque) donations." : "Contribute funds to Valmiki Trust cause."}
+              {user?.role === "admin" ? "Log new online or offline (cash/cheque) donations." : "Contribute funds to AIRD Trust cause."}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -923,7 +923,7 @@ export default function DonationManagementPage() {
               Donation Receipt Preview
             </DialogTitle>
             <DialogDescription className="text-gray-400 text-xs">
-              Official receipt issued by Valmiki Samaj Charitable Trust.
+              Official receipt issued by Appropriate Institute of Rural Development.
             </DialogDescription>
           </DialogHeader>
 

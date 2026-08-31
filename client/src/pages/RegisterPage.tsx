@@ -114,11 +114,11 @@ export default function RegisterPage() {
       <div className="w-full max-w-md">
         {/* Logo and Header */}
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Heart className="h-8 w-8 text-red-500" />
-            <h1 className="text-3xl font-bold text-gray-900">NGO Management</h1>
+          <div className="flex flex-col items-center justify-center gap-2 mb-4">
+            <img src="/aird-logo.png" alt="AIRD Emblem" className="h-16 w-16 object-contain rounded-full shadow-sm bg-white p-1" />
+            <h1 className="text-2xl font-bold text-gray-900">AIRD Management Portal</h1>
           </div>
-          <p className="text-gray-600">Create your account</p>
+          <p className="text-gray-600">Create your account &bull; Appropriate Institute of Rural Development</p>
         </div>
 
         {/* Register Card */}

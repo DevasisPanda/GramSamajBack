@@ -701,7 +701,7 @@ export type InsertOrganizationCertificate = typeof organizationCertificates.$inf
  */
 export const homepageSettings = mysqlTable("homepage_settings", {
   id: int("id").autoincrement().primaryKey(),
-  heroTitle: varchar("heroTitle", { length: 255 }).default("Valmiki Samaj Charitable Trust"),
+  heroTitle: varchar("heroTitle", { length: 255 }).default("Appropriate Institute of Rural Development"),
   heroDescription: text("heroDescription"),
   heroImage: text("heroImage"),
   heroImage2: text("heroImage2"),

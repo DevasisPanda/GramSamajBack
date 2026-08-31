@@ -134,15 +134,17 @@ export async function generateReceiptPDF(fieldValues: Record<string, string>): P
   // Trust Logo
   try {
     const possibleLogoPaths = [
-      path.join(process.cwd(), "public/logo.jpg"),
-      path.join(process.cwd(), "../Frontend/public/logo.png"),
-      path.join(process.cwd(), "../Frontend/public/logo.jpg"),
+      path.join(process.cwd(), "public/aird-logo.png"),
+      path.join(process.cwd(), "client/public/aird-logo.png"),
+      path.join(process.cwd(), "public/logo.png"),
+      path.join(process.cwd(), "../Frontend/public/aird-logo.png"),
     ];
     for (const logoPath of possibleLogoPaths) {
       if (fs.existsSync(logoPath)) {
         const logoBuffer = fs.readFileSync(logoPath);
-        const logoBase64 = `data:image/jpeg;base64,${logoBuffer.toString("base64")}`;
-        pdf.addImage(logoBase64, "JPEG", MARGIN_X + 4, currentY + 4, 28, 28);
+        const isPng = logoPath.endsWith('.png');
+        const logoBase64 = `data:${isPng ? 'image/png' : 'image/jpeg'};base64,${logoBuffer.toString("base64")}`;
+        pdf.addImage(logoBase64, isPng ? "PNG" : "JPEG", MARGIN_X + 4, currentY + 4, 28, 28);
         break;
       }
     }
@@ -423,12 +425,12 @@ export async function generateReceiptPDF(fieldValues: Record<string, string>): P
   pdf.setFont("helvetica", "italic");
   pdf.setTextColor(30, 58, 138); // Blue signature text
   pdf.setFontSize(18);
-  pdf.text("Narayan Rathod", MARGIN_X + (CONTENT_W * 0.79), currentY + 15, { align: "center" });
+  pdf.text("K. C. Tripathi", MARGIN_X + (CONTENT_W * 0.79), currentY + 15, { align: "center" });
 
   pdf.setFont("helvetica", "bold");
   pdf.setFontSize(11.5);
   pdf.setTextColor(185, 28, 28); // #b91c1c
-  pdf.text("President/Founder(Narayan Rathod)", MARGIN_X + (CONTENT_W * 0.79), currentY + 23, { align: "center" });
+  pdf.text("Managing Trustee (K. C. Tripathi)", MARGIN_X + (CONTENT_W * 0.79), currentY + 23, { align: "center" });
 
   drawRow(sigRowH);
   currentY += sigRowH;
@@ -442,14 +444,14 @@ export async function generateReceiptPDF(fieldValues: Record<string, string>): P
   pdf.setTextColor(30, 64, 175);
   pdf.text(">", MARGIN_X + 4, currentY + 4);
   pdf.setTextColor(0, 0, 0);
-  pdf.text("Your Donation is Tax Exempted Under Section 80G (5) which Donation is eligible for Deduction.", MARGIN_X + 9, currentY + 4);
+  pdf.text("Your Donation supports the rural development & Gram Swaraj movement led by AIRD.", MARGIN_X + 9, currentY + 4);
 
   // Line 2
   currentY += 7;
   pdf.setTextColor(30, 64, 175);
   pdf.text(">", MARGIN_X + 4, currentY + 4);
   pdf.setTextColor(0, 0, 0);
-  pdf.text("All Disputes Regarding Donation Receipts Subject to Mosasa, State Gujrat Jurisdiction only.", MARGIN_X + 9, currentY + 4);
+  pdf.text("All Disputes Regarding Donation Receipts Subject to Lucknow, State Uttar Pradesh Jurisdiction only.", MARGIN_X + 9, currentY + 4);
 
   // Line 3
   currentY += 7;

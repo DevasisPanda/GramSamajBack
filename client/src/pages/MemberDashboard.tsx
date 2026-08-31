@@ -95,7 +95,7 @@ export default function MemberDashboard() {
         amount: amountNum,
         donorId: profile?.id,
         donorName: profile?.name || "Valued Member",
-        donorEmail: profile?.email || "member@valmikisamajcharitabletrust.org",
+        donorEmail: profile?.email || "member@airdup.com",
         donorPhone: (profile?.phone || "").replace(/\D/g, "").slice(0, 10) || undefined,
         purpose: selectedCampaign === "general" ? (donationNotes || "General Donation") : `Campaign Donation: ${selectedCampaign}`,
         campaignId: selectedCampaign !== "general" ? parseInt(selectedCampaign) : undefined,
@@ -112,7 +112,7 @@ export default function MemberDashboard() {
             amount: orderData.amount,
             currency: orderData.currency,
             order_id: orderData.orderId,
-            name: "Valmiki Samaj Charitable Trust",
+            name: "Appropriate Institute of Rural Development",
             description: selectedCampaign === "general" ? (donationNotes || "NGO Donation") : `Campaign #${selectedCampaign}`,
             prefill: {
               name: profile?.name || "",
@@ -558,7 +558,7 @@ export default function MemberDashboard() {
                 }`}
                 onClick={() => {
                   if (myMembership?.status === "active") {
-                    const baseUrl = configQuery.data?.frontendUrl || "https://valmikisamajcharitabletrust.org";
+                    const baseUrl = configQuery.data?.frontendUrl || "https://airdup.com";
                     window.open(`${baseUrl}/beneficiary`, "_blank");
                   } else {
                     toast.error("Active Membership Required! Approval takes up to 24h after payment.");
@@ -573,7 +573,7 @@ export default function MemberDashboard() {
               <Button 
                 className="min-h-[48px] h-auto py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 gap-2 text-white text-xs sm:text-sm flex items-center justify-center" 
                 onClick={() => {
-                  const baseUrl = configQuery.data?.frontendUrl || "https://valmikisamajcharitabletrust.org";
+                  const baseUrl = configQuery.data?.frontendUrl || "https://airdup.com";
                   window.open(`${baseUrl}/view-beneficiary`, "_blank");
                 }}
               >
@@ -665,7 +665,7 @@ export default function MemberDashboard() {
               My Certificates
             </DialogTitle>
             <DialogDescription>
-              Certificates awarded to you by Valmiki Samaj Charitable Trust.
+              Certificates awarded to you by Appropriate Institute of Rural Development.
             </DialogDescription>
           </DialogHeader>
 
@@ -808,7 +808,7 @@ export default function MemberDashboard() {
               Digital ID Card
             </DialogTitle>
             <DialogDescription>
-              Your official digital identity card from Valmiki Samaj Charitable Trust.
+              Your official digital identity card from Appropriate Institute of Rural Development.
             </DialogDescription>
           </DialogHeader>
 
@@ -926,7 +926,7 @@ export default function MemberDashboard() {
               Donation Receipt Preview
             </DialogTitle>
             <DialogDescription>
-              Official tax-exempted receipt for your contribution to Valmiki Samaj Charitable Trust.
+              Official tax-exempted receipt for your contribution to Appropriate Institute of Rural Development.
             </DialogDescription>
           </DialogHeader>
 
@@ -971,7 +971,7 @@ export default function MemberDashboard() {
               Appointment Letter Preview
             </DialogTitle>
             <DialogDescription>
-              Preview of your official appointment letter from Valmiki Samaj Charitable Trust.
+              Preview of your official appointment letter from Appropriate Institute of Rural Development.
             </DialogDescription>
           </DialogHeader>
 

@@ -205,8 +205,8 @@ export default function ExpensesDataPage() {
     // Header
     doc.setFont("helvetica", "bold");
     doc.setFontSize(18);
-    doc.setTextColor(30, 41, 59); // slate-800
-    doc.text("Valmiki Samaj Charitable Trust", 14, 20);
+    doc.setTextColor(21, 128, 61); // forest-700
+    doc.text("Appropriate Institute of Rural Development", 14, 20);
     
     doc.setFontSize(14);
     doc.text("Expenses Report", 14, 28);

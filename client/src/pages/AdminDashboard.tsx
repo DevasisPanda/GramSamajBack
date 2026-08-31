@@ -116,9 +116,12 @@ export default function AdminDashboard() {
       {/* Header */}
       <div className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Heart className="h-8 w-8 text-red-500" />
-            <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+          <div className="flex items-center gap-3">
+            <img src="/aird-logo.png" alt="AIRD Emblem" className="h-10 w-10 object-contain rounded-full border border-gray-100 shadow-sm" />
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">AIRD Admin Dashboard</h1>
+              <p className="text-xs text-gray-500">Appropriate Institute of Rural Development</p>
+            </div>
           </div>
           <Button onClick={handleLogout} variant="outline" className="gap-2">
             <LogOut className="h-4 w-4" />

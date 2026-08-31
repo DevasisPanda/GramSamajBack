@@ -15,8 +15,8 @@ export default function Home() {
       <nav className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Heart className="h-6 w-6 text-red-500" />
-            <h1 className="text-2xl font-bold text-gray-900">NGO Management</h1>
+            <img src="/aird-logo.png" alt="AIRD Emblem" className="h-8 w-8 object-contain" />
+            <h1 className="text-xl font-bold text-gray-900">AIRD Management Portal</h1>
           </div>
           <div className="flex items-center gap-4">
             {isAuthenticated && user ? (

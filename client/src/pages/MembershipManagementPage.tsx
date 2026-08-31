@@ -152,7 +152,7 @@ export default function MembershipManagementPage() {
             const options = {
               key: orderData.key,
               order_id: orderData.orderId,
-              name: "Valmiki Samaj Charitable Trust",
+              name: "Appropriate Institute of Rural Development",
               description: `Membership Fee (${selectedPlan === "lifetime" ? "Lifetime One-Time" : "Annual Subscription"})`,
               prefill: {
                 name: formData.name,

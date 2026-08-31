@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const FloatingWhatsAppBadge: React.FC = () => {
-  const whatsappUrl = "https://wa.me/919024548020?text=Hello%20Valmiki%20Samaj%20Charitable%20Trust";
+  const whatsappUrl = "https://wa.me/919415014644?text=Hello%20AIRD%20Trust";
 
   return (
     <a
@@ -9,7 +9,7 @@ export const FloatingWhatsAppBadge: React.FC = () => {
       target="_blank"
       rel="noopener noreferrer"
       className="fixed bottom-4 right-4 z-[9999] block transition-transform duration-300 hover:scale-105 active:scale-95 drop-shadow-[0_8px_20px_rgba(0,0,0,0.5)] group"
-      title="Contact Us on WhatsApp - 9024548020"
+      title="Contact AIRD Trust on WhatsApp - 9415014644"
     >
       <img
         src="/Work1.png"

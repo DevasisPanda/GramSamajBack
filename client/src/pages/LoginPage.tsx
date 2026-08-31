@@ -61,8 +61,8 @@ export default function LoginPage() {
           >
             &larr; Return to Main Website
           </a>
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <Heart className="h-7 w-7 text-saffron-600" />
+          <div className="flex flex-col items-center justify-center gap-2 mb-2">
+            <img src="/aird-logo.png" alt="AIRD Emblem" className="h-16 w-16 object-contain rounded-full shadow-sm bg-white p-1" />
             <h1 className="text-2xl font-bold text-gray-900">AIRD Management Portal</h1>
           </div>
           <p className="text-xs text-gray-600">Appropriate Institute of Rural Development (AIRD Trust)</p>

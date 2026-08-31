@@ -135,7 +135,7 @@ export default function MemberDetailsPage() {
             {member.user?.profileImage ? (
               <img src={member.user.profileImage} alt="Profile" className="w-full h-full object-cover" />
             ) : (
-              <img src="/valmiki-logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+              <img src="/aird-logo.png" alt="AIRD Logo" className="w-full h-full object-contain p-1" />
             )}
           </div>
           <div className="flex items-center gap-2 text-gray-800 font-semibold">

@@ -122,25 +122,25 @@ export const DonationReceiptHTML: React.FC<DonationReceiptHTMLProps> = ({ fieldV
               justifyContent: 'center',
               flexShrink: 0,
             }}>
-              <img src="/logo.jpg" alt="Trust Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="/aird-logo.png" alt="AIRD Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
 
             {/* Trust Details */}
             <div style={{ flex: 1, textAlign: 'center' }}>
-              <div style={{ fontSize: '28px', fontWeight: 900, color: '#d03b0d', marginBottom: '4px', letterSpacing: '0.5px' }}>
-                Valmiki Samaj Charitable Trust
+              <div style={{ fontSize: '24px', fontWeight: 900, color: '#15803d', marginBottom: '4px', letterSpacing: '0.5px' }}>
+                Appropriate Institute of Rural Development
               </div>
-              <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#000', marginBottom: '3px' }}>
-                Rg.No. F/1968/Aravalli, &nbsp;&nbsp;Establishment Dt. 24/01/2020
+              <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#000', marginBottom: '3px' }}>
+                Reg. No: 9002139 IV-66/2020 &nbsp;&bull;&nbsp; NGO Darpan: UP/2022/0303967
               </div>
-              <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#000', marginBottom: '3px' }}>
-                Web site - https : //valmikisamajcharitabletrust.org
+              <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#000', marginBottom: '3px' }}>
+                Website: https://airdup.com &nbsp;&bull;&nbsp; Lucknow, Uttar Pradesh
               </div>
-              <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#b91c1c', marginBottom: '3px' }}>
-                President Narayan Rathod, &nbsp;Contact +91 8200315792
+              <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#b91c1c', marginBottom: '3px' }}>
+                Contact: +91 9415014644
               </div>
-              <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#000' }}>
-                ✉ valmikisamajcharitabletrust@gmail.com
+              <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#000' }}>
+                ✉ aird.org.in@gmail.com
               </div>
             </div>
 
@@ -171,10 +171,10 @@ export const DonationReceiptHTML: React.FC<DonationReceiptHTMLProps> = ({ fieldV
           </div>
 
           <div style={{ fontSize: '12.5px', fontWeight: 'bold', textAlign: 'center', color: '#000', marginTop: '6px' }}>
-            📍Ramji Mandir Rd, At & Post - Tintoi, Tal - Modasa, Dist - Aravalli, Pin - 383250
+            📍46-A, Nai Basti Babu Ganj, Lucknow, Uttar Pradesh – 226020
           </div>
-          <div style={{ fontSize: '12.5px', fontWeight: 900, textAlign: 'center', color: '#c026d3', marginTop: '4px', letterSpacing: '0.3px' }}>
-            Bank Acc. BOB 07210100099557 RTGS/NEFT IFSC CODE BARB0MODASA
+          <div style={{ fontSize: '12.5px', fontWeight: 900, textAlign: 'center', color: '#15803d', marginTop: '4px', letterSpacing: '0.3px' }}>
+            State Bank of India &bull; Acc. Name: AIRD.INDIA &bull; IFSC: SBIN0003813
           </div>
         </div>
 
@@ -294,11 +294,11 @@ export const DonationReceiptHTML: React.FC<DonationReceiptHTMLProps> = ({ fieldV
                 <span style={{ color: '#000', fontWeight: 'bold', fontSize: '14px' }}>: {fieldValues.purpose || ''}</span>
               </td>
               <td style={{ width: '42%', textAlign: 'center', verticalAlign: 'bottom', paddingBottom: '10px' }}>
-                <div style={{ fontFamily: "'Brush Script MT', 'Segoe Script', cursive", fontSize: '26px', color: '#1e3a8a', marginBottom: '4px' }}>
-                  Narayan Rathod
+                <div style={{ fontFamily: "'Brush Script MT', 'Segoe Script', cursive", fontSize: '24px', color: '#1e3a8a', marginBottom: '4px' }}>
+                  K. C. Tripathi
                 </div>
                 <div style={{ color: '#b91c1c', fontWeight: 900, fontSize: '13px' }}>
-                  President/Founder(Narayan Rathod)
+                  Managing Trustee (K. C. Tripathi)
                 </div>
               </td>
             </tr>
@@ -309,11 +309,11 @@ export const DonationReceiptHTML: React.FC<DonationReceiptHTMLProps> = ({ fieldV
         <div style={{ padding: '10px 14px 12px 14px', fontSize: '12px', lineHeight: 1.65 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', color: '#000', fontWeight: 'bold' }}>
             <span style={{ color: '#1e40af', fontWeight: 900, fontSize: '15px', lineHeight: 1.2 }}>➡</span>
-            <span>Your Donation is Tax Exempted Under Section 80G (5) which Donation is eligible for Deduction.</span>
+            <span>Your Donation supports the rural development &amp; Gram Swaraj movement led by AIRD.</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', color: '#000', fontWeight: 'bold' }}>
             <span style={{ color: '#1e40af', fontWeight: 900, fontSize: '15px', lineHeight: 1.2 }}>➡</span>
-            <span>All Disputes Regarding Donation Receipts Subject to Mosasa, State Gujrat Jurisdiction only.</span>
+            <span>All Disputes Regarding Donation Receipts Subject to Lucknow, State Uttar Pradesh Jurisdiction only.</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', color: '#000', fontWeight: 'bold' }}>
             <span style={{ color: '#1e40af', fontWeight: 900, fontSize: '15px', lineHeight: 1.2 }}>➡</span>

@@ -198,10 +198,10 @@ export default function AdminSidebar({ isOpen, onClose }: { isOpen?: boolean; on
           </div>
 
           <div className="flex items-center gap-3 mb-3">
-            <img src="/logo.jpg" alt="Valmiki Trust Logo" className="w-12 h-12 object-contain rounded-full border border-gray-100 shadow-xs" />
+            <img src="/aird-logo.png" alt="AIRD Trust Logo" className="w-12 h-12 object-contain rounded-full border border-gray-100 shadow-sm" />
             <div>
-              <h1 className="text-xl font-extrabold text-blue-600 leading-tight">NGO Admin</h1>
-              <p className="text-xs text-gray-500 font-medium">Management System</p>
+              <h1 className="text-xl font-extrabold text-forest-800 leading-tight">AIRD Admin</h1>
+              <p className="text-xs text-gray-500 font-medium">NGO Management System</p>
             </div>
           </div>
           <a 

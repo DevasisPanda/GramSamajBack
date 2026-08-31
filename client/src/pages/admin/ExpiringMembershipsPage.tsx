@@ -305,7 +305,7 @@ export default function ExpiringMembershipsPage() {
                                 className="h-7 px-2 text-xs bg-green-50 text-green-700 border-green-300 hover:bg-green-100 font-bold flex items-center gap-1"
                                 onClick={() => {
                                   const phoneClean = (member.phone || '').replace(/\D/g, '');
-                                  const text = `Hello ${member.name || 'Member'},\nYour Valmiki Samaj Charitable Trust membership renewal of ₹500 is due on ${expiryDateObj ? format(expiryDateObj, "dd-MM-yyyy") : 'soon'}.\nPlease renew your membership at ${window.location.origin}/member/membership`;
+                                  const text = `Hello ${member.name || 'Member'},\nYour AIRD Trust membership renewal is due on ${expiryDateObj ? format(expiryDateObj, "dd-MM-yyyy") : 'soon'}.\nPlease renew your membership at ${window.location.origin}/member/membership`;
                                   window.open(`https://wa.me/${phoneClean}?text=${encodeURIComponent(text)}`, '_blank');
                                 }}
                               >

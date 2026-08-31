@@ -107,8 +107,8 @@ export default function AdminPanel() {
               <Menu className="w-6 h-6" />
             </button>
             <div className="flex items-center gap-2">
-              <img src="/logo.jpg" alt="Logo" className="w-8 h-8 rounded-full object-contain" />
-              <span className="font-extrabold text-blue-600 text-sm tracking-tight">NGO Admin</span>
+              <img src="/aird-logo.png" alt="AIRD Logo" className="w-8 h-8 rounded-full object-contain" />
+              <span className="font-extrabold text-forest-800 text-sm tracking-tight">AIRD Admin</span>
             </div>
           </div>
         </div>

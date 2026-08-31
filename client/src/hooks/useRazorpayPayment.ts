@@ -65,7 +65,7 @@ export function useRazorpayPayment() {
                 key: order.keyId,
                 amount: order.amount,
                 currency: order.currency,
-                name: "Valmiki Samaj Charitable Trust",
+                name: "Appropriate Institute of Rural Development",
                 description: options.purpose
                   ? `Donation for ${options.purpose}`
                   : "General Donation",
