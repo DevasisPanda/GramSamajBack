@@ -1,188 +1,167 @@
 import mysql from "mysql2/promise";
 import { hashPassword } from "./auth";
 
-export const TABLE_DEFINITIONS = [
-  `CREATE TABLE IF NOT EXISTS \`users\` (
-    \`id\` int AUTO_INCREMENT NOT NULL,
-    \`openId\` varchar(64) UNIQUE,
-    \`name\` text,
-    \`email\` varchar(320) UNIQUE,
-    \`passwordHash\` text,
-    \`phone\` varchar(20),
-    \`loginMethod\` varchar(64),
-    \`role\` enum('user','admin','staff','volunteer') NOT NULL DEFAULT 'user',
-    \`isSystemAdmin\` boolean NOT NULL DEFAULT false,
-    \`status\` enum('active','inactive','blocked','pending') NOT NULL DEFAULT 'pending',
-    \`membershipType\` varchar(50),
-    \`profileImage\` text,
-    \`bio\` text,
-    \`fatherName\` varchar(255),
-    \`dob\` date,
-    \`aadharNumber\` varchar(255),
-    \`gender\` enum('male','female','other'),
-    \`maritalStatus\` enum('single','married','divorced','widowed'),
-    \`category\` enum('General','OBC','SC','ST','Other'),
-    \`bloodGroup\` varchar(10),
-    \`occupation\` varchar(255),
-    \`address\` text,
-    \`pinCode\` varchar(20),
-    \`state\` varchar(100),
-    \`city\` varchar(100),
-    \`designation\` varchar(255),
-    \`resetToken\` varchar(255),
-    \`resetTokenExpiry\` timestamp,
-    \`tokenGeneration\` int NOT NULL DEFAULT 0,
-    \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    \`lastSignedIn\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT \`users_id\` PRIMARY KEY(\`id\`)
-  )`,
-
-  `CREATE TABLE IF NOT EXISTS \`members\` (
-    \`id\` int AUTO_INCREMENT NOT NULL,
-    \`userId\` int NOT NULL,
-    \`membershipNumber\` varchar(50) NOT NULL UNIQUE,
-    \`membershipType\` enum('regular','lifetime') NOT NULL DEFAULT 'regular',
-    \`status\` enum('pending','active','inactive','expired','rejected') NOT NULL DEFAULT 'pending',
-    \`joinDate\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    \`renewalDate\` timestamp,
-    \`expiryDate\` timestamp,
-    \`referralCode\` varchar(50) UNIQUE,
-    \`referredBy\` int,
-    \`approvedBy\` int,
-    \`approvalDate\` timestamp,
-    \`notes\` text,
-    \`paymentStatus\` enum('unpaid','paid','exempted') NOT NULL DEFAULT 'unpaid',
-    \`paymentTxnId\` varchar(255),
-    \`amountPaid\` varchar(50),
-    \`paymentType\` enum('lifetime_one_time','yearly_subscription','admin_exempted'),
-    \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT \`members_id\` PRIMARY KEY(\`id\`)
-  )`,
-
-  `CREATE TABLE IF NOT EXISTS \`donations\` (
-    \`id\` int AUTO_INCREMENT NOT NULL,
-    \`userId\` int,
-    \`donorName\` varchar(255) NOT NULL,
-    \`donorEmail\` varchar(320) NOT NULL,
-    \`donorPhone\` varchar(20),
-    \`donorPan\` varchar(20),
-    \`donorAddress\` text,
-    \`amount\` decimal(12,2) NOT NULL,
-    \`currency\` varchar(10) NOT NULL DEFAULT 'INR',
-    \`purpose\` varchar(255),
-    \`campaignId\` int,
-    \`paymentMethod\` varchar(50),
-    \`paymentStatus\` enum('pending','completed','failed','refunded') NOT NULL DEFAULT 'pending',
-    \`razorpayOrderId\` varchar(255),
-    \`razorpayPaymentId\` varchar(255),
-    \`receiptNumber\` varchar(50) UNIQUE,
-    \`receiptUrl\` text,
-    \`isAnonymous\` boolean NOT NULL DEFAULT false,
-    \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT \`donations_id\` PRIMARY KEY(\`id\`)
-  )`,
-
-  `CREATE TABLE IF NOT EXISTS \`campaigns\` (
-    \`id\` int AUTO_INCREMENT NOT NULL,
-    \`title\` varchar(255) NOT NULL,
-    \`description\` longtext,
-    \`targetAmount\` decimal(12,2) NOT NULL,
-    \`raisedAmount\` decimal(12,2) NOT NULL DEFAULT '0.00',
-    \`startDate\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    \`endDate\` timestamp,
-    \`status\` enum('draft','active','completed','cancelled') NOT NULL DEFAULT 'draft',
-    \`imageUrl\` text,
-    \`category\` varchar(100),
-    \`beneficiaryDetails\` text,
-    \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT \`campaigns_id\` PRIMARY KEY(\`id\`)
-  )`,
-
-  `CREATE TABLE IF NOT EXISTS \`events\` (
-    \`id\` int AUTO_INCREMENT NOT NULL,
-    \`title\` varchar(255) NOT NULL,
-    \`description\` longtext,
-    \`eventDate\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    \`location\` varchar(255),
-    \`category\` varchar(100),
-    \`status\` enum('upcoming','ongoing','completed','cancelled') NOT NULL DEFAULT 'upcoming',
-    \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT \`events_id\` PRIMARY KEY(\`id\`)
-  )`,
-
-  `CREATE TABLE IF NOT EXISTS \`gallery\` (
-    \`id\` int AUTO_INCREMENT NOT NULL,
-    \`title\` varchar(255) NOT NULL,
-    \`description\` text,
-    \`imageUrl\` text,
-    \`redirectUrl\` text,
-    \`mediaType\` enum('image','video') NOT NULL DEFAULT 'image',
-    \`category\` varchar(100),
-    \`uploadedBy\` int,
-    \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT \`gallery_id\` PRIMARY KEY(\`id\`)
-  )`,
-
-  `CREATE TABLE IF NOT EXISTS \`enquiries\` (
-    \`id\` int AUTO_INCREMENT NOT NULL,
-    \`name\` varchar(255) NOT NULL,
-    \`email\` varchar(320) NOT NULL,
-    \`phone\` varchar(20),
-    \`subject\` varchar(255),
-    \`message\` longtext NOT NULL,
-    \`status\` enum('new','in_progress','resolved','closed') NOT NULL DEFAULT 'new',
-    \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT \`enquiries_id\` PRIMARY KEY(\`id\`)
-  )`,
-
-  `CREATE TABLE IF NOT EXISTS \`beneficiaries\` (
-    \`id\` int AUTO_INCREMENT NOT NULL,
-    \`name\` varchar(255) NOT NULL,
-    \`phone\` varchar(20),
-    \`address\` text,
-    \`category\` varchar(100),
-    \`status\` varchar(50) DEFAULT 'active',
-    \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT \`beneficiaries_id\` PRIMARY KEY(\`id\`)
-  )`,
-
-  `CREATE TABLE IF NOT EXISTS \`expenses\` (
-    \`id\` int AUTO_INCREMENT NOT NULL,
-    \`title\` varchar(255) NOT NULL,
-    \`amount\` decimal(12,2) NOT NULL,
-    \`category\` varchar(100) NOT NULL,
-    \`expenseDate\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    \`description\` text,
-    \`receiptUrl\` text,
-    \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT \`expenses_id\` PRIMARY KEY(\`id\`)
-  )`,
-
-  `CREATE TABLE IF NOT EXISTS \`news\` (
-    \`id\` int AUTO_INCREMENT NOT NULL,
-    \`title\` varchar(255) NOT NULL,
-    \`content\` longtext NOT NULL,
-    \`publishedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    \`category\` varchar(100),
-    \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT \`news_id\` PRIMARY KEY(\`id\`)
-  )`,
-
-  `CREATE TABLE IF NOT EXISTS \`auditLogs\` (
-    \`id\` int AUTO_INCREMENT NOT NULL,
-    \`userId\` int,
-    \`action\` varchar(255) NOT NULL,
-    \`details\` text,
-    \`ipAddress\` varchar(45),
-    \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT \`auditLogs_id\` PRIMARY KEY(\`id\`)
-  )`
-];
+export const TABLE_COLUMNS: Record<string, Array<{ name: string; type: string }>> = {
+  users: [
+    { name: "id", type: "int AUTO_INCREMENT PRIMARY KEY" },
+    { name: "openId", type: "varchar(64) UNIQUE" },
+    { name: "name", type: "text" },
+    { name: "email", type: "varchar(320) UNIQUE" },
+    { name: "passwordHash", type: "text" },
+    { name: "phone", type: "varchar(20)" },
+    { name: "loginMethod", type: "varchar(64)" },
+    { name: "role", type: "enum('user','admin','staff','volunteer') NOT NULL DEFAULT 'user'" },
+    { name: "isSystemAdmin", type: "boolean NOT NULL DEFAULT false" },
+    { name: "status", type: "enum('active','inactive','blocked','pending') NOT NULL DEFAULT 'pending'" },
+    { name: "membershipType", type: "varchar(50)" },
+    { name: "profileImage", type: "text" },
+    { name: "bio", type: "text" },
+    { name: "fatherName", type: "varchar(255)" },
+    { name: "dob", type: "date" },
+    { name: "aadharNumber", type: "varchar(255)" },
+    { name: "gender", type: "enum('male','female','other')" },
+    { name: "maritalStatus", type: "enum('single','married','divorced','widowed')" },
+    { name: "category", type: "enum('General','OBC','SC','ST','Other')" },
+    { name: "bloodGroup", type: "varchar(10)" },
+    { name: "occupation", type: "varchar(255)" },
+    { name: "address", type: "text" },
+    { name: "pinCode", type: "varchar(20)" },
+    { name: "state", type: "varchar(100)" },
+    { name: "city", type: "varchar(100)" },
+    { name: "designation", type: "varchar(255)" },
+    { name: "resetToken", type: "varchar(255)" },
+    { name: "resetTokenExpiry", type: "timestamp NULL" },
+    { name: "tokenGeneration", type: "int NOT NULL DEFAULT 0" },
+    { name: "createdAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" },
+    { name: "updatedAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" },
+    { name: "lastSignedIn", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" }
+  ],
+  members: [
+    { name: "id", type: "int AUTO_INCREMENT PRIMARY KEY" },
+    { name: "userId", type: "int NOT NULL" },
+    { name: "membershipNumber", type: "varchar(50) NOT NULL UNIQUE" },
+    { name: "membershipType", type: "enum('regular','lifetime') NOT NULL DEFAULT 'regular'" },
+    { name: "status", type: "enum('pending','active','inactive','expired','rejected') NOT NULL DEFAULT 'pending'" },
+    { name: "joinDate", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" },
+    { name: "renewalDate", type: "timestamp NULL" },
+    { name: "expiryDate", type: "timestamp NULL" },
+    { name: "referralCode", type: "varchar(50) UNIQUE" },
+    { name: "referredBy", type: "int" },
+    { name: "approvedBy", type: "int" },
+    { name: "approvalDate", type: "timestamp NULL" },
+    { name: "notes", type: "text" },
+    { name: "paymentStatus", type: "enum('unpaid','paid','exempted') NOT NULL DEFAULT 'unpaid'" },
+    { name: "paymentTxnId", type: "varchar(255)" },
+    { name: "amountPaid", type: "varchar(50)" },
+    { name: "paymentType", type: "enum('lifetime_one_time','yearly_subscription','admin_exempted')" },
+    { name: "createdAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" },
+    { name: "updatedAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" }
+  ],
+  donations: [
+    { name: "id", type: "int AUTO_INCREMENT PRIMARY KEY" },
+    { name: "userId", type: "int" },
+    { name: "donorName", type: "varchar(255) NOT NULL" },
+    { name: "donorEmail", type: "varchar(320) NOT NULL" },
+    { name: "donorPhone", type: "varchar(20)" },
+    { name: "donorPan", type: "varchar(20)" },
+    { name: "donorAddress", type: "text" },
+    { name: "amount", type: "decimal(12,2) NOT NULL" },
+    { name: "currency", type: "varchar(10) NOT NULL DEFAULT 'INR'" },
+    { name: "purpose", type: "varchar(255)" },
+    { name: "campaignId", type: "int" },
+    { name: "paymentMethod", type: "varchar(50)" },
+    { name: "paymentStatus", type: "enum('pending','completed','failed','refunded') NOT NULL DEFAULT 'pending'" },
+    { name: "razorpayOrderId", type: "varchar(255)" },
+    { name: "razorpayPaymentId", type: "varchar(255)" },
+    { name: "receiptNumber", type: "varchar(50) UNIQUE" },
+    { name: "receiptUrl", type: "text" },
+    { name: "isAnonymous", type: "boolean NOT NULL DEFAULT false" },
+    { name: "createdAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" },
+    { name: "updatedAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" }
+  ],
+  campaigns: [
+    { name: "id", type: "int AUTO_INCREMENT PRIMARY KEY" },
+    { name: "title", type: "varchar(255) NOT NULL" },
+    { name: "description", type: "longtext" },
+    { name: "targetAmount", type: "decimal(12,2) NOT NULL" },
+    { name: "raisedAmount", type: "decimal(12,2) NOT NULL DEFAULT '0.00'" },
+    { name: "startDate", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" },
+    { name: "endDate", type: "timestamp NULL" },
+    { name: "status", type: "enum('draft','active','completed','cancelled') NOT NULL DEFAULT 'draft'" },
+    { name: "imageUrl", type: "text" },
+    { name: "category", type: "varchar(100)" },
+    { name: "beneficiaryDetails", type: "text" },
+    { name: "createdAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" },
+    { name: "updatedAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" }
+  ],
+  events: [
+    { name: "id", type: "int AUTO_INCREMENT PRIMARY KEY" },
+    { name: "title", type: "varchar(255) NOT NULL" },
+    { name: "description", type: "longtext" },
+    { name: "eventDate", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" },
+    { name: "location", type: "varchar(255)" },
+    { name: "category", type: "varchar(100)" },
+    { name: "status", type: "enum('upcoming','ongoing','completed','cancelled') NOT NULL DEFAULT 'upcoming'" },
+    { name: "createdAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" },
+    { name: "updatedAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" }
+  ],
+  gallery: [
+    { name: "id", type: "int AUTO_INCREMENT PRIMARY KEY" },
+    { name: "title", type: "varchar(255) NOT NULL" },
+    { name: "description", type: "text" },
+    { name: "imageUrl", type: "text" },
+    { name: "redirectUrl", type: "text" },
+    { name: "mediaType", type: "enum('image','video') NOT NULL DEFAULT 'image'" },
+    { name: "category", type: "varchar(100)" },
+    { name: "uploadedBy", type: "int" },
+    { name: "createdAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" }
+  ],
+  enquiries: [
+    { name: "id", type: "int AUTO_INCREMENT PRIMARY KEY" },
+    { name: "name", type: "varchar(255) NOT NULL" },
+    { name: "email", type: "varchar(320) NOT NULL" },
+    { name: "phone", type: "varchar(20)" },
+    { name: "subject", type: "varchar(255)" },
+    { name: "message", type: "longtext NOT NULL" },
+    { name: "status", type: "enum('new','in_progress','resolved','closed') NOT NULL DEFAULT 'new'" },
+    { name: "createdAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" }
+  ],
+  beneficiaries: [
+    { name: "id", type: "int AUTO_INCREMENT PRIMARY KEY" },
+    { name: "name", type: "varchar(255) NOT NULL" },
+    { name: "phone", type: "varchar(20)" },
+    { name: "address", type: "text" },
+    { name: "category", type: "varchar(100)" },
+    { name: "status", type: "varchar(50) DEFAULT 'active'" },
+    { name: "createdAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" }
+  ],
+  expenses: [
+    { name: "id", type: "int AUTO_INCREMENT PRIMARY KEY" },
+    { name: "title", type: "varchar(255) NOT NULL" },
+    { name: "amount", type: "decimal(12,2) NOT NULL" },
+    { name: "category", type: "varchar(100) NOT NULL" },
+    { name: "expenseDate", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" },
+    { name: "description", type: "text" },
+    { name: "receiptUrl", type: "text" },
+    { name: "createdAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" }
+  ],
+  news: [
+    { name: "id", type: "int AUTO_INCREMENT PRIMARY KEY" },
+    { name: "title", type: "varchar(255) NOT NULL" },
+    { name: "content", type: "longtext NOT NULL" },
+    { name: "publishedAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" },
+    { name: "category", type: "varchar(100)" },
+    { name: "createdAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" }
+  ],
+  auditLogs: [
+    { name: "id", type: "int AUTO_INCREMENT PRIMARY KEY" },
+    { name: "userId", type: "int" },
+    { name: "action", type: "varchar(255) NOT NULL" },
+    { name: "details", type: "text" },
+    { name: "ipAddress", type: "varchar(45)" },
+    { name: "createdAt", type: "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP" }
+  ]
+};
 
 let initPromise: Promise<void> | null = null;
 
@@ -195,21 +174,45 @@ export async function ensureDatabaseReady(databaseUrl?: string): Promise<void> {
 
   if (!initPromise) {
     initPromise = (async () => {
-      let connection;
+      let connection: mysql.Connection | null = null;
       try {
-        console.log("[Database] Connecting to verify and initialize database tables...");
+        console.log("[Database] Connecting to verify and auto-migrate all tables and columns...");
         connection = await mysql.createConnection(dbUrl);
 
-        for (const query of TABLE_DEFINITIONS) {
+        for (const [tableName, columns] of Object.entries(TABLE_COLUMNS)) {
           try {
-            await connection.query(query);
-          } catch (qErr: any) {
-            // Ignore minor duplicate warnings
+            // Check if table exists
+            const [tables]: any = await connection.query(`SHOW TABLES LIKE '${tableName}'`);
+            if (tables.length === 0) {
+              // Build create table query
+              const colDefs = columns.map(c => `\`${c.name}\` ${c.type}`).join(", ");
+              await connection.query(`CREATE TABLE \`${tableName}\` (${colDefs})`);
+              console.log(`[Database] Created table: ${tableName}`);
+            } else {
+              // Table exists: verify all columns exist, add missing columns
+              const [existingCols]: any = await connection.query(`SHOW COLUMNS FROM \`${tableName}\``);
+              const existingNames = new Set(existingCols.map((r: any) => r.Field.toLowerCase()));
+
+              for (const col of columns) {
+                if (!existingNames.has(col.name.toLowerCase())) {
+                  try {
+                    // Strip PRIMARY KEY / AUTO_INCREMENT for added columns
+                    const cleanType = col.type.replace(/AUTO_INCREMENT/gi, "").replace(/PRIMARY KEY/gi, "").trim();
+                    await connection.query(`ALTER TABLE \`${tableName}\` ADD COLUMN \`${col.name}\` ${cleanType}`);
+                    console.log(`[Database] Added missing column: ${tableName}.${col.name}`);
+                  } catch (alterErr: any) {
+                    console.warn(`[Database] Notice adding ${tableName}.${col.name}:`, alterErr?.message);
+                  }
+                }
+              }
+            }
+          } catch (tblErr: any) {
+            console.error(`[Database] Error processing table ${tableName}:`, tblErr?.message);
           }
         }
-        console.log("[Database] ✅ All database tables verified and ready.");
+        console.log("[Database] ✅ All database tables and columns are fully synchronized.");
 
-        // Automatically seed admin user if configured
+        // Automatically seed/synchronize admin user
         const adminEmail = (process.env.ADMIN_EMAIL || "admin@airdup.com").trim().toLowerCase();
         const adminPassword = process.env.ADMIN_SEED_PASSWORD || "admin123";
 
