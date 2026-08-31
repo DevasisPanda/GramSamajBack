@@ -27,17 +27,32 @@ export const authRouter = router({
     .input(
       z.object({
         email: z.string().email(),
-        password: z.string().min(6),
+        password: z.string().min(1),
       })
     )
     .mutation(async ({ input }) => {
-      const db = await getDb();
-      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+      let db = null;
+      try {
+        db = await getDb();
+      } catch (err: any) {
+        console.error("[auth.login] DB connection error:", err);
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: `Database error: ${err?.message || "Failed to connect"}` });
+      }
 
-      let user = await db.select().from(users).where(eq(users.email, input.email)).limit(1);
+      if (!db) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable. Please check DATABASE_URL in environment." });
+      }
 
+      const cleanEmail = input.email.trim().toLowerCase();
+      let user = null;
+      try {
+        user = await db.select().from(users).where(eq(users.email, cleanEmail)).limit(1);
+      } catch (err: any) {
+        console.error("[auth.login] Query error on users table:", err);
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: `Database query failed: ${err?.message || "Table not found"}` });
+      }
 
-      if (user.length === 0) {
+      if (!user || user.length === 0) {
         throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid email or password" });
       }
 

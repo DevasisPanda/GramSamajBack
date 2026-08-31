@@ -6,13 +6,10 @@ import type { TrpcContext } from "./context";
 const t = initTRPC.context<TrpcContext>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
-    const isProduction = process.env.NODE_ENV === "production";
+    console.error(`[tRPC Error on ${shape.data?.path || 'unknown'}]:`, error.message, error.cause || '');
     return {
       ...shape,
-      message:
-        isProduction && error.code === "INTERNAL_SERVER_ERROR"
-          ? "An unexpected internal server error occurred."
-          : error.message,
+      message: error.message || "An unexpected error occurred",
     };
   },
 });
