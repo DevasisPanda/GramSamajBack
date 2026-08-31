@@ -165,6 +165,35 @@ export const TABLE_COLUMNS: Record<string, Array<{ name: string; type: string }>
 
 let initPromise: Promise<void> | null = null;
 
+function getCleanDbConnectionConfig(dbUrl: string): any {
+  try {
+    const isCloud =
+      dbUrl.includes("aivencloud.com") ||
+      dbUrl.includes("planetscale") ||
+      dbUrl.includes("tidb") ||
+      dbUrl.includes("ssl-mode") ||
+      dbUrl.includes("ssl=");
+
+    if (isCloud || dbUrl.startsWith("mysql://") || dbUrl.startsWith("mysqls://")) {
+      const url = new URL(dbUrl);
+      return {
+        host: url.hostname,
+        port: parseInt(url.port || "3306"),
+        user: decodeURIComponent(url.username),
+        password: decodeURIComponent(url.password),
+        database: url.pathname.replace(/^\//, "") || "defaultdb",
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      };
+    }
+  } catch (parseErr) {
+    console.warn("[Database] Connection URI parse notice:", parseErr);
+  }
+
+  return dbUrl;
+}
+
 export async function ensureDatabaseReady(databaseUrl?: string): Promise<void> {
   const dbUrl = databaseUrl || process.env.DATABASE_URL;
   if (!dbUrl) {
@@ -177,7 +206,7 @@ export async function ensureDatabaseReady(databaseUrl?: string): Promise<void> {
       let connection: mysql.Connection | null = null;
       try {
         console.log("[Database] Connecting to verify and auto-migrate all tables and columns...");
-        connection = await mysql.createConnection(dbUrl);
+        connection = await mysql.createConnection(getCleanDbConnectionConfig(dbUrl));
 
         for (const [tableName, columns] of Object.entries(TABLE_COLUMNS)) {
           try {
